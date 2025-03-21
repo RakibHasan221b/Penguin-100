@@ -1,45 +1,45 @@
 import requests
 import joblib
 import pandas as pd
-from datetime import datetime
 
-# Fetch new penguin data
+# Fetch the new penguin data from the API
 response = requests.get("http://130.225.39.127:8000/new_penguin/")
+print(f"Status Code: {response.status_code}")
+print(f"Response JSON: {response.json()}")  # Debug print
 
 if response.status_code == 200:
     data = response.json()
 
+    # Check the data structure before using it
+    print("Fetched Data:", data)  # Debug print
+
     sample_data = {
-        "bill_length_mm": data['bill_length_mm'],
-        "bill_depth_mm": data['bill_depth_mm'],
-        "flipper_length_mm": data['flipper_length_mm'],
-        "body_mass_g": data['body_mass_g']
+        "bill_length_mm": data.get('bill_length_mm'),
+        "bill_depth_mm": data.get('bill_depth_mm'),
+        "flipper_length_mm": data.get('flipper_length_mm'),
+        "body_mass_g": data.get('body_mass_g')
     }
 
-    model = joblib.load("penguin_classifier.pkl")
-    expected_features = model.feature_names_in_
-    sample_input = pd.DataFrame([sample_data], columns=expected_features)
+    # Ensure all values are present
+    if None in sample_data.values():
+        print("❌ Error: Missing values in sample_data:", sample_data)
+    else:
+        # Load the trained model
+        model = joblib.load("penguin_classifier.pkl")
 
-    prediction = model.predict(sample_input)
-    species_mapping = {0: "Adelie", 1: "Chinstrap", 2: "Gentoo"}
-    predicted_species = species_mapping[prediction[0]]
+        # Get feature names from the trained model
+        expected_features = model.feature_names_in_
 
-    # Create Markdown content
-    timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-    markdown_content = f"# 🐧 Daily Penguin Prediction\n\n"
-    markdown_content += f"**Date:** {timestamp}\n\n"
-    markdown_content += f"**Predicted Species:** {predicted_species}\n\n"
-    markdown_content += f"**Feature Values:**\n"
-    markdown_content += f"- Bill Length (mm): {sample_data['bill_length_mm']}\n"
-    markdown_content += f"- Bill Depth (mm): {sample_data['bill_depth_mm']}\n"
-    markdown_content += f"- Flipper Length (mm): {sample_data['flipper_length_mm']}\n"
-    markdown_content += f"- Body Mass (g): {sample_data['body_mass_g']}\n"
+        # Convert the sample data into a DataFrame
+        sample_input = pd.DataFrame([sample_data], columns=expected_features)
 
-    # Save to prediction.md
-    with open("prediction.md", "w") as f:
-        f.write(markdown_content)
+        # Make a prediction
+        prediction = model.predict(sample_input)
 
-    print("✅ Prediction saved to prediction.md")
+        # Map the predicted label to species name
+        species_mapping = {0: "Adelie", 1: "Chinstrap", 2: "Gentoo"}
+        predicted_species = species_mapping[prediction[0]]
 
+        print("✅ Predicted Penguin Species:", predicted_species)
 else:
     print("❌ Failed to fetch data from the API")
