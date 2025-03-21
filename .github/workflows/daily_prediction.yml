@@ -1,0 +1,27 @@
+name: Daily Penguin Prediction
+
+on:
+  schedule:
+    - cron: '30 6 * * *'  # Runs every day at 7:30 AM CET (UTC+1)
+  workflow_dispatch:  # Allows manual triggering
+
+jobs:
+  fetch_and_predict:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Set up Python
+        uses: actions/setup-python@v2
+        with:
+          python-version: '3.8'
+
+      - name: Install dependencies
+        run: |
+          pip install -r requirements.txt
+
+      - name: Run prediction script
+        run: |
+          python prediction_test.py  # This is the script that makes the prediction
