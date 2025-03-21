@@ -1,45 +1,26 @@
-import requests
-import joblib
 import pandas as pd
+import joblib
+import requests
+import numpy as np
 
-# Fetch the new penguin data from the API
-response = requests.get("http://130.225.39.127:8000/new_penguin/")
-print(f"Status Code: {response.status_code}")
-print(f"Response JSON: {response.json()}")  # Debug print
+# Load model
+model = joblib.load("penguin_classifier.pkl")
 
+# Fetch new data
+response = requests.get("API_ENDPOINT_HERE")  # Replace with your API endpoint
 if response.status_code == 200:
     data = response.json()
+    sample_input = pd.DataFrame([data])
 
-    # Check the data structure before using it
-    print("Fetched Data:", data)  # Debug print
+    # Handle missing values by filling NaNs with the mean (or another strategy)
+    sample_input.fillna(sample_input.mean(), inplace=True)
 
-    sample_data = {
-        "bill_length_mm": data.get('bill_length_mm'),
-        "bill_depth_mm": data.get('bill_depth_mm'),
-        "flipper_length_mm": data.get('flipper_length_mm'),
-        "body_mass_g": data.get('body_mass_g')
-    }
+    # Make prediction
+    prediction = model.predict(sample_input)
 
-    # Ensure all values are present
-    if None in sample_data.values():
-        print("❌ Error: Missing values in sample_data:", sample_data)
-    else:
-        # Load the trained model
-        model = joblib.load("penguin_classifier.pkl")
+    # Save prediction
+    with open("prediction.md", "w") as f:
+        f.write(f"Predicted Penguin Species: {prediction[0]}\n")
 
-        # Get feature names from the trained model
-        expected_features = model.feature_names_in_
-
-        # Convert the sample data into a DataFrame
-        sample_input = pd.DataFrame([sample_data], columns=expected_features)
-
-        # Make a prediction
-        prediction = model.predict(sample_input)
-
-        # Map the predicted label to species name
-        species_mapping = {0: "Adelie", 1: "Chinstrap", 2: "Gentoo"}
-        predicted_species = species_mapping[prediction[0]]
-
-        print("✅ Predicted Penguin Species:", predicted_species)
 else:
-    print("❌ Failed to fetch data from the API")
+    print(f"Failed to fetch data, status code: {response.status_code}")
