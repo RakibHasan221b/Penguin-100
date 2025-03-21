@@ -10,18 +10,24 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repository
+        uses: actions/checkout@v3
 
       - name: Set up Python
-        uses: actions/setup-python@v2
+        uses: actions/setup-python@v3
         with:
           python-version: '3.8'
 
       - name: Install dependencies
-        run: |
-          pip install -r requirements.txt
+        run: pip install -r requirements.txt
 
       - name: Run prediction script
+        run: python prediction.py
+
+      - name: Commit and push prediction
         run: |
-          python prediction_test.py  # This is the script that makes the prediction
+          git config --global user.name "github-actions"
+          git config --global user.email "github-actions@github.com"
+          git add prediction.md
+          git commit -m "📈 Update daily penguin prediction"
+          git push
