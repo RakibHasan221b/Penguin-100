@@ -1,5 +1,3 @@
-# Penguin-100
-
 # Project: Penguin Classification and Prediction
 
 ## 1. Overview
@@ -26,6 +24,7 @@ This project automates the daily prediction of penguin species using machine lea
 - **`prediction.py`**: 
   - Loads the trained classifier model (`penguin_classifier.pkl`).
   - Fetches new data from the API.
+  - Cleans and preprocesses the data to handle missing values.
   - Makes a prediction on the penguin species.
   - Outputs the predicted species.
 
@@ -41,8 +40,9 @@ This project automates the daily prediction of penguin species using machine lea
 ## 3. How It Works
 1. GitHub Actions triggers the workflow daily at 7:30 AM CET.
 2. The `prediction.py` script fetches new data from the API.
-3. The trained model (`penguin_classifier.pkl`) predicts the species.
-4. The results are displayed and stored for future analysis.
+3. The data is cleaned to handle any missing values.
+4. The trained model (`penguin_classifier.pkl`) predicts the species.
+5. The results are displayed and stored for future analysis.
 
 ## 4. Setup Instructions
 1. Clone the repository:
@@ -65,6 +65,7 @@ This project automates the daily prediction of penguin species using machine lea
 
 ## 5. Notes
 - Ensure your API endpoint is accessible before running the prediction script.
+- The `prediction.py` script now includes data cleaning to handle missing values before making predictions.
 - The GitHub Actions workflow automates the prediction daily, but you can trigger it manually if needed.
 
 ---
