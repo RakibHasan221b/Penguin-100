@@ -32,4 +32,4 @@ jobs:
           git config --global user.email "github-actions@github.com"
           git add prediction.md
           git commit -m "📈 Update daily penguin prediction" || echo "No changes to commit"
-          git push https://github-actions:${{ secrets.GITHUB_TOKEN }}@github.com/RakibHasan221b/Penguin-100.git HEAD:main
+          git push
