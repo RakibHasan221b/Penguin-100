@@ -1,1 +1,1 @@
-Predicted Species: Chinstrap
+Predicted Species: Adelie
