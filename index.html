@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Daily Penguin Prediction</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            margin: 20px;
+            padding: 0;
+            background-color: #f4f4f4;
+        }
+        h1 {
+            text-align: center;
+        }
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            background: white;
+        }
+        th, td {
+            border: 1px solid #ddd;
+            padding: 10px;
+            text-align: center;
+        }
+        th {
+            background-color: #4CAF50;
+            color: white;
+        }
+    </style>
+</head>
+<body>
+    <h1>Daily Penguin Prediction</h1>
+    <table>
+        <thead>
+            <tr>
+                <th>Date</th>
+                <th>Bill Length (mm)</th>
+                <th>Bill Depth (mm)</th>
+                <th>Flipper Length (mm)</th>
+                <th>Body Mass (g)</th>
+                <th>Predicted Species</th>
+                <th>Confidence (%)</th>
+            </tr>
+        </thead>
+        <tbody id="prediction-table"></tbody>
+    </table>
+
+    <script>
+        async function loadPredictions() {
+            try {
+                const response = await fetch("data/predictions/history.json");
+                const data = await response.json();
+                const tableBody = document.getElementById("prediction-table");
+                tableBody.innerHTML = "";
+
+                data.forEach((entry) => {
+                    const row = `<tr>
+                        <td>${entry.date}</td>
+                        <td>${entry.penguin_data.bill_length_mm.toFixed(2)}</td>
+                        <td>${entry.penguin_data.bill_depth_mm.toFixed(2)}</td>
+                        <td>${entry.penguin_data.flipper_length_mm.toFixed(2)}</td>
+                        <td>${entry.penguin_data.body_mass_g.toFixed(2)}</td>
+                        <td>${entry.predicted_species}</td>
+                        <td>${(entry.species_probabilities[entry.predicted_species] * 100).toFixed(1)}%</td>
+                    </tr>`;
+                    tableBody.innerHTML += row;
+                });
+            } catch (error) {
+                console.error("Error loading prediction data:", error);
+            }
+        }
+
+        loadPredictions();
+    </script>
+</body>
+</html>
