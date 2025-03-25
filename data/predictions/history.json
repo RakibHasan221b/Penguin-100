@@ -1,0 +1,34 @@
+[
+  {
+    "date": "2025-03-25",
+    "penguin_data": {
+      "bill_length_mm": 43.9790403302779,
+      "bill_depth_mm": 17.67018906199478,
+      "flipper_length_mm": 215.99938872577417,
+      "body_mass_g": 3752.5424351489537
+    },
+    "predicted_species": "Adelie",
+    "species_probabilities": {
+      "Adelie": 0.46,
+      "Chinstrap": 0.3,
+      "Gentoo": 0.24
+    },
+    "is_adelie": true
+  },
+  {
+    "date": "2025-03-25",
+    "penguin_data": {
+      "bill_length_mm": 42.589171842727794,
+      "bill_depth_mm": 16.153400750139337,
+      "flipper_length_mm": 179.69861861784906,
+      "body_mass_g": 3864.4108543520533
+    },
+    "predicted_species": "2",
+    "species_probabilities": {
+      "1": 0.33,
+      "2": 0.51,
+      "3": 0.16
+    },
+    "is_adelie": false
+  }
+]
